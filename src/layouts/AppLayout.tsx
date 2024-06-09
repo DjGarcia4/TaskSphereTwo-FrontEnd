@@ -1,15 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Logo from "@/components/Logo";
 import NavMenu from "@/components/NavMenu";
 
 const AppLayout = () => {
   return (
     <>
-      <header className=" bg-white py-5">
-        <div className=" max-w-screen-xl mx-auto flex flex-col lg:flex-row justify-between items-center">
-          <div className="w-64">
+      <header className=" bg-white py-2">
+        <div className=" max-w-screen-xl mx-10 md:mx-auto flex flex-row justify-between items-center">
+          <Link to="/" className="w-12 flex items-center">
             <Logo />
-          </div>
+            <p className="flex text-2xl">
+              Task <span className=" text-pink-600">Sphere</span>
+            </p>
+          </Link>
           <NavMenu />
         </div>
       </header>

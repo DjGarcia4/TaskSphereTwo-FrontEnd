@@ -1,47 +1,60 @@
 import { Link, useNavigate } from "react-router-dom";
+import ProjectForm from "./ProjectForm";
+import { Project, ProjectFormData } from "@/types/index";
 import { useForm } from "react-hook-form";
-import ProjectForm from "@/components/projects/ProjectForm";
-import { ProjectFormData } from "@/types/index";
-import { createProject } from "@/api/ProjectAPI";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProject } from "@/api/ProjectAPI";
 import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
 
-const CreateProjectView = () => {
+type EditProjectFormProps = {
+  data: ProjectFormData;
+  projectId: Project["_id"];
+};
+
+const EditProjectForm = ({ data, projectId }: EditProjectFormProps) => {
   const navigate = useNavigate();
   const initialValues: ProjectFormData = {
-    projectName: "",
-    clientName: "",
-    description: "",
+    projectName: data.projectName,
+    clientName: data.clientName,
+    description: data.description,
   };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
+  const queryClient = useQueryClient();
+
   const mutation = useMutation({
-    mutationFn: createProject,
+    mutationFn: updateProject,
   });
 
-  const handleForm = async (data: ProjectFormData) => {
+  const handleForm = async (formData: ProjectFormData) => {
+    const data = {
+      formData,
+      projectId,
+    };
     const myPromise = mutation.mutateAsync(data);
 
     toast.promise(myPromise, {
-      loading: "Creando Proyecto...",
-      success: "Proyecto creado correctamente!",
-      error: "Error al crear el proyecto",
+      loading: "Editando Proyecto...",
+      success: "Proyecto Actualizado correctamente!",
+      error: "Error al editar el proyecto",
     });
-
     await myPromise;
+    queryClient.invalidateQueries({ queryKey: ["projects"] });
+    queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
     navigate("/");
   };
   return (
     <>
       <div className="flex  justify-between">
         <div>
-          <h1 className=" text-4xl md:text-5xl ">Crear Proyecto</h1>
+          <h1 className=" text-4xl md:text-5xl ">Editar Proyecto</h1>
           <p className=" text-1xl md:text-2xl font-light text-gray-500 mt-5">
-            Llena el siguiente formulario para crear un proyecto.
+            Llena el siguiente formulario para editar un proyecto.
           </p>
         </div>
         <nav className=" my-5">
@@ -61,7 +74,7 @@ const CreateProjectView = () => {
         <ProjectForm register={register} errors={errors} />
         <input
           type="submit"
-          value="Crear Proyecto"
+          value="Guardar Cambios"
           className="bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-xl  cursor-pointer transition-colors rounded-lg w-full"
         />
       </form>
@@ -69,4 +82,4 @@ const CreateProjectView = () => {
   );
 };
 
-export default CreateProjectView;
+export default EditProjectForm;
