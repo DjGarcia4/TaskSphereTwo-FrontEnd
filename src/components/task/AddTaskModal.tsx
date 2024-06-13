@@ -53,7 +53,7 @@ export default function AddTaskModal() {
 
     await myPromise;
     reset();
-    queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
+    queryClient.invalidateQueries({ queryKey: ["project", projectId] });
     navigate("", { replace: true });
   };
 

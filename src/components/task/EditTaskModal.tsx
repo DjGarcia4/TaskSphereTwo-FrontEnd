@@ -51,7 +51,7 @@ export default function EditTaskModal({
     });
     await myPromise;
 
-    queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
+    queryClient.invalidateQueries({ queryKey: ["project", projectId] });
     navigate(location.pathname, { replace: true });
     reset();
   };
