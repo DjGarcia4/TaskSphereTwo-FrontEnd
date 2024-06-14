@@ -37,7 +37,7 @@ export default function TaskModalDetails() {
     const data = {
       projectId,
       taskId,
-      status: e.target.value,
+      status: e.target.value as Task["status"],
     };
     const myPromise = mutation.mutateAsync(data);
 
