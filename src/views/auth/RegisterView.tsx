@@ -143,6 +143,12 @@ export default function RegisterView() {
         >
           ¿Ya tienes cuenta? Inicia Sesión
         </Link>
+        <Link
+          to="/auth/forgot-password "
+          className=" text-center text-gray-500 font-normal hover:text-pink-600 cursor-pointer transition-colors"
+        >
+          ¿Olvidaste tu contraseña? Restablecela
+        </Link>
       </nav>
     </>
   );
