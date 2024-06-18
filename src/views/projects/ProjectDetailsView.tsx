@@ -5,7 +5,7 @@ import TaskList from "@/components/task/TaskList";
 import TaskModalDetails from "@/components/task/TaskModalDetails";
 
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 
 const PrjectDetailsView = () => {
   const navigate = useNavigate();
@@ -20,20 +20,26 @@ const PrjectDetailsView = () => {
   if (data)
     return (
       <>
-        <div className="flex flex-col md:flex-row  justify-between">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-4">
           <div>
             <h1 className=" text-4xl md:text-5xl ">{data.projectName}</h1>
             <p className="  text-xl md:text-2xl font-light text-gray-500 mt-5">
               {data.description}
             </p>
           </div>
-          <nav className=" my-5">
+          <nav className=" flex justify-center gap-3 h-10">
             <button
               onClick={() => navigate("?newTask=true")}
-              className=" bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-1xl cursor-pointer transition-colors rounded-lg"
+              className=" bg-pink-600 hover:bg-pink-700 px-5 text-white text-1xl cursor-pointer transition-colors rounded-lg"
             >
               Crear Tarea
             </button>
+            <Link
+              to={"team"}
+              className=" bg-pink-600 hover:bg-pink-700 px-5 text-white text-1xl cursor-pointer transition-colors rounded-lg flex items-center"
+            >
+              Colaboradores
+            </Link>
           </nav>
         </div>
         <TaskList tasks={data.tasks} />

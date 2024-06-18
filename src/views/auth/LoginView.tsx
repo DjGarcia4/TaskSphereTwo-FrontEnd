@@ -1,12 +1,13 @@
 import { useForm } from "react-hook-form";
 import { UserLoginForm } from "@/types/index";
 import ErrorMessage from "@/components/ErrorMessage";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/api/AuthAPI";
 import toast from "react-hot-toast";
 
 export default function LoginView() {
+  const navigate = useNavigate();
   const initialValues: UserLoginForm = {
     email: "",
     password: "",
@@ -24,7 +25,7 @@ export default function LoginView() {
     const myPromise = mutation.mutateAsync(formData);
     toast.promise(myPromise, {
       loading: "Iniciando Sesión...",
-      success: "Sesión iniciada correctamente",
+      success: `¡Bienvenido!`,
       error: (err) => {
         // Captura y muestra mensajes de error personalizados
         const errorMessage = err.message || "Error sin especificar";
@@ -32,6 +33,7 @@ export default function LoginView() {
       },
     });
     await myPromise;
+    navigate("/");
   };
 
   return (

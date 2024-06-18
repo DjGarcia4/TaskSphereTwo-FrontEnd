@@ -131,7 +131,7 @@ const DashboardView = () => {
         ) : (
           <p className=" text-center py-20">
             No hay proyectos aún{" "}
-            <Link to="/projects/create" className=" text-pink-600 font-bold">
+            <Link to="/projects/create" className=" text-pink-600">
               Crea un Proyecto
             </Link>
           </p>

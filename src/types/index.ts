@@ -19,6 +19,13 @@ export type ForgotPasswordForm = Pick<Auth, "email">;
 export type NewPasswordForm = Pick<Auth, "password" | "password_confirmation">;
 
 export type ConfirmToken = Pick<Auth, "token">;
+
+//Users
+export const userSchema = AuthSchema.pick({
+  name: true,
+  email: true,
+}).extend({ _id: z.string() });
+export type User = z.infer<typeof userSchema>;
 // Tasks
 export const taskStatusSchema = z.enum([
   "pending",
@@ -61,3 +68,5 @@ export type ProjectFormData = Pick<
 
 export type Task = z.infer<typeof taskSchema>;
 export type TaskFormData = Pick<Task, "name" | "description">;
+
+//Team

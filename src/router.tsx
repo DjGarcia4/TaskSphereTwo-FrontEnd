@@ -11,6 +11,7 @@ import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import ForgotPasswordView from "./views/auth/ForgotPasswordView";
 import NewPasswordView from "./views/auth/NewPasswordView";
+import ProjectTeamView from "./views/projects/ProjectTeamView";
 
 const router = () => {
   return (
@@ -32,6 +33,11 @@ const router = () => {
           <Route
             path="/projects/:projectId/edit"
             element={<EditProjectView />}
+            index
+          />
+          <Route
+            path="/projects/:projectId/team"
+            element={<ProjectTeamView />}
             index
           />
         </Route>
