@@ -1,16 +1,26 @@
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
 import { ProjectFormData } from "@/types/index";
+import { motion } from "framer-motion";
 
 type ProjectFormProps = {
   register: UseFormRegister<ProjectFormData>;
   errors: FieldErrors<ProjectFormData>;
 };
 
+const itemVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
 export default function ProjectForm({ register, errors }: ProjectFormProps) {
   return (
     <>
-      <div className="mb-5 space-y-3">
+      <motion.div className="mb-5 space-y-3" variants={itemVariants}>
         <label htmlFor="projectName" className="text-sm uppercase font-bold">
           Nombre del Proyecto
         </label>
@@ -27,9 +37,9 @@ export default function ProjectForm({ register, errors }: ProjectFormProps) {
         {errors.projectName && (
           <ErrorMessage>{errors.projectName.message}</ErrorMessage>
         )}
-      </div>
+      </motion.div>
 
-      <div className="mb-5 space-y-3">
+      <motion.div className="mb-5 space-y-3" variants={itemVariants}>
         <label htmlFor="clientName" className="text-sm uppercase font-bold">
           Nombre Cliente
         </label>
@@ -46,9 +56,9 @@ export default function ProjectForm({ register, errors }: ProjectFormProps) {
         {errors.clientName && (
           <ErrorMessage>{errors.clientName.message}</ErrorMessage>
         )}
-      </div>
+      </motion.div>
 
-      <div className="mb-5 space-y-3">
+      <motion.div className="mb-5 space-y-3" variants={itemVariants}>
         <label htmlFor="description" className="text-sm uppercase font-bold">
           Descripción
         </label>
@@ -64,7 +74,7 @@ export default function ProjectForm({ register, errors }: ProjectFormProps) {
         {errors.description && (
           <ErrorMessage>{errors.description.message}</ErrorMessage>
         )}
-      </div>
+      </motion.div>
     </>
   );
 }

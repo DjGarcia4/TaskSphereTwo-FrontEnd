@@ -5,6 +5,7 @@ import { ProjectFormData } from "@/types/index";
 import { createProject } from "@/api/ProjectAPI";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 
 const CreateProjectView = () => {
   const navigate = useNavigate();
@@ -35,19 +36,25 @@ const CreateProjectView = () => {
     await myPromise;
     navigate("/");
   };
+
   return (
-    <>
-      <div className="flex  justify-between">
+    <motion.div
+      initial={{ x: 100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: -100, opacity: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <div className="flex justify-between">
         <div>
-          <h1 className=" text-4xl md:text-5xl ">Crear Proyecto</h1>
-          <p className=" text-1xl md:text-2xl font-light text-gray-500 mt-5">
+          <h1 className="text-4xl md:text-5xl">Crear Proyecto</h1>
+          <p className="text-1xl md:text-2xl font-light text-gray-500 mt-5">
             Llena el siguiente formulario para crear un proyecto.
           </p>
         </div>
-        <nav className=" my-5">
+        <nav className="my-5">
           <Link
             to="/"
-            className=" bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-1xl  cursor-pointer transition-colors rounded-lg"
+            className="bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-1xl cursor-pointer transition-colors rounded-lg"
           >
             Volver
           </Link>
@@ -62,10 +69,10 @@ const CreateProjectView = () => {
         <input
           type="submit"
           value="Crear Proyecto"
-          className="bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-xl  cursor-pointer transition-colors rounded-lg w-full"
+          className="bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-xl cursor-pointer transition-colors rounded-lg w-full"
         />
       </form>
-    </>
+    </motion.div>
   );
 };
 

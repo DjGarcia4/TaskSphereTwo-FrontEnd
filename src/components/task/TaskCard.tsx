@@ -92,9 +92,12 @@ const TaskCard = ({ task }: TaskCardProps) => {
         </Menu>
       </div>
       <div className=" my-2">
-        <div className=" text-2xl hover:text-pink-600 transition-colors">
+        <button
+          className=" text-2xl hover:text-pink-600 transition-colors"
+          onClick={() => navigate(location.pathname + `?viewTask=${task._id}`)}
+        >
           {task.name}
-        </div>
+        </button>
 
         <p className=" text-gray-400">{task.description}</p>
       </div>
@@ -102,7 +105,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <div>
           <p>Notas</p>
         </div>
-        <div className="bg-emerald-500 hover:bg-emerald-600 px-2 py-1 text-white cursor-pointer transition-colors rounded-lg text-sm">
+        <div className="bg-purple-400 hover:bg-purple-600 px-2 py-1 text-white  transition-colors rounded-lg text-sm">
           Jared Garcia
         </div>
       </div>

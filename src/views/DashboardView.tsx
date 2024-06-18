@@ -3,10 +3,37 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Fragment } from "react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-
 import { Menu, Transition } from "@headlessui/react";
 import { Project } from "../types";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+
+const listVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
 
 const DashboardView = () => {
   const { data, isLoading } = useQuery({
@@ -35,31 +62,41 @@ const DashboardView = () => {
   if (isLoading) return "Cargando...";
   if (data)
     return (
-      <>
-        <div className="flex flex-col md:flex-row  justify-between">
+      <motion.div
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 100, opacity: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <div className="flex flex-col md:flex-row justify-between">
           <div>
-            <h1 className=" text-4xl md:text-5xl ">Mis Proyectos</h1>
-            <p className="  text-1xl md:text-2xl font-light text-gray-500 mt-5">
+            <h1 className="text-4xl md:text-5xl">Mis Proyectos</h1>
+            <p className="text-1xl md:text-2xl font-light text-gray-500 mt-5">
               Maneja y administra tus proyectos.
             </p>
           </div>
-          <nav className=" my-5">
+          <nav className="my-5">
             <Link
               to="/projects/create"
-              className=" bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-1xl cursor-pointer transition-colors rounded-lg"
+              className="bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-1xl cursor-pointer transition-colors rounded-lg"
             >
               Nuevo Proyecto
             </Link>
           </nav>
         </div>
         {data.length ? (
-          <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5 ">
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5"
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {data.map((project) => (
-              <div
-                className=" bg-white p-5 rounded-lg shadow relative"
+              <motion.div
+                className="bg-white p-5 rounded-lg shadow relative"
                 key={project._id}
+                variants={itemVariants}
               >
-                {/* <div className=" bg-white px-5 pt-5 pb-12 rounded-lg shadow relative"> */}
                 <div className="flex shrink-0 items-center gap-x-6 absolute right-0">
                   <Menu as="div" className="relative flex-none">
                     <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
@@ -102,17 +139,17 @@ const DashboardView = () => {
                     </Transition>
                   </Menu>
                 </div>
-                <div className=" my-2">
+                <div className="my-2">
                   <Link
                     to={`/projects/${project._id}`}
-                    className=" text-2xl hover:text-pink-600 transition-colors"
+                    className="text-2xl hover:text-pink-600 transition-colors"
                   >
                     {project.projectName}
                   </Link>
-                  <h1 className=" text-1xl">{project.clientName}</h1>
-                  <p className=" text-gray-400">{project.description}</p>
+                  <h1 className="text-1xl">{project.clientName}</h1>
+                  <p className="text-gray-400">{project.description}</p>
                 </div>
-                <div className=" w-full flex justify-end">
+                <div className="w-full flex justify-end">
                   <Link
                     to={`/projects/${project._id}`}
                     className="bg-emerald-500 hover:bg-emerald-600 px-2 py-1 text-white cursor-pointer transition-colors rounded-lg text-sm"
@@ -120,23 +157,18 @@ const DashboardView = () => {
                     Ver Proyecto
                   </Link>
                 </div>
-                {/* <div className=" text-right absolute left-0 bottom-0 w-full">
-                  <p className=" text-white bg-rose-400 rounded-b-lg p-1 text-sm">
-                    Colaborador
-                  </p>
-                </div> */}
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
-          <p className=" text-center py-20">
+          <p className="text-center py-20">
             No hay proyectos aún{" "}
-            <Link to="/projects/create" className=" text-pink-600">
+            <Link to="/projects/create" className="text-pink-600">
               Crea un Proyecto
             </Link>
           </p>
         )}
-      </>
+      </motion.div>
     );
 };
 

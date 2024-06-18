@@ -5,6 +5,34 @@ import ErrorMessage from "@/components/ErrorMessage";
 import { useMutation } from "@tanstack/react-query";
 import { requestConfirmationCode } from "@/api/AuthAPI";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+
+const listVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
 
 export default function RegisterView() {
   const initialValues: RequestConfirmationCodeForm = {
@@ -31,7 +59,6 @@ export default function RegisterView() {
       success:
         "Codigo solicitado correctamente, revisa tu email para confirmar tu cuenta",
       error: (err) => {
-        // Captura y muestra mensajes de error personalizados
         const errorMessage = err.message || "Error sin especificar";
         return errorMessage;
       },
@@ -48,16 +75,23 @@ export default function RegisterView() {
         <span className=" text-pink-600"> un nuevo código</span>
       </p>
 
-      <form
+      <motion.form
         onSubmit={handleSubmit(handleRequestCode)}
         className="space-y-8 p-10 rounded-lg bg-white mt-10 shadow-lg"
         noValidate
+        variants={listVariants}
+        initial="hidden"
+        animate="visible"
       >
-        <div className="flex flex-col gap-5">
-          <label className="font-normal text-2xl" htmlFor="email">
+        <motion.div className="flex flex-col gap-5" variants={listVariants}>
+          <motion.label
+            className="font-normal text-2xl"
+            htmlFor="email"
+            variants={itemVariants}
+          >
             Email
-          </label>
-          <input
+          </motion.label>
+          <motion.input
             id="email"
             type="email"
             placeholder="Email de Registro"
@@ -69,16 +103,18 @@ export default function RegisterView() {
                 message: "E-mail no válido",
               },
             })}
+            variants={itemVariants}
           />
           {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
-        </div>
+        </motion.div>
 
-        <input
+        <motion.input
           type="submit"
           value="Enviar Código"
           className="bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-xl  cursor-pointer transition-colors rounded-lg w-full"
+          variants={itemVariants}
         />
-      </form>
+      </motion.form>
 
       <nav className="mt-10 flex flex-col space-y-4">
         <Link

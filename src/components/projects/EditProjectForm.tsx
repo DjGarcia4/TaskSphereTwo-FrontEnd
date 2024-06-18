@@ -5,6 +5,26 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProject } from "@/api/ProjectAPI";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+
+const formVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
 
 type EditProjectFormProps = {
   data: ProjectFormData;
@@ -48,8 +68,14 @@ const EditProjectForm = ({ data, projectId }: EditProjectFormProps) => {
     queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
     navigate("/");
   };
+
   return (
-    <>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      variants={formVariants}
+    >
       <div className="flex  justify-between">
         <div>
           <h1 className=" text-4xl md:text-5xl ">Editar Proyecto</h1>
@@ -71,14 +97,17 @@ const EditProjectForm = ({ data, projectId }: EditProjectFormProps) => {
         onSubmit={handleSubmit(handleForm)}
         noValidate
       >
-        <ProjectForm register={register} errors={errors} />
-        <input
+        <motion.div variants={itemVariants}>
+          <ProjectForm register={register} errors={errors} />
+        </motion.div>
+        <motion.input
           type="submit"
           value="Guardar Cambios"
           className="bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-xl  cursor-pointer transition-colors rounded-lg w-full"
+          variants={itemVariants}
         />
       </form>
-    </>
+    </motion.div>
   );
 };
 
