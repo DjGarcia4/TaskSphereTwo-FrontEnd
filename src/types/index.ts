@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 // Auth & Users
 const AuthSchema = z.object({
   name: z.string(),
@@ -20,12 +21,13 @@ export type NewPasswordForm = Pick<Auth, "password" | "password_confirmation">;
 
 export type ConfirmToken = Pick<Auth, "token">;
 
-//Users
+// Users
 export const userSchema = AuthSchema.pick({
   name: true,
   email: true,
 }).extend({ _id: z.string() });
 export type User = z.infer<typeof userSchema>;
+
 // Tasks
 export const taskStatusSchema = z.enum([
   "pending",
@@ -43,12 +45,14 @@ export const taskSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
 });
+
 // Projects
 export const projectSchema = z.object({
   _id: z.string(),
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
+  manager: z.array(z.string()), // Define that the array contains strings
 });
 
 export const dashboardProjectSchema = z.array(
@@ -57,6 +61,7 @@ export const dashboardProjectSchema = z.array(
     projectName: true,
     clientName: true,
     description: true,
+    manager: true,
   })
 );
 
@@ -69,7 +74,7 @@ export type ProjectFormData = Pick<
 export type Task = z.infer<typeof taskSchema>;
 export type TaskFormData = Pick<Task, "name" | "description">;
 
-//Team
+// Team
 const teamMemberSchema = userSchema.pick({
   _id: true,
   name: true,

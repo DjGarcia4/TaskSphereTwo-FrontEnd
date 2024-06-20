@@ -90,8 +90,6 @@ export async function updatePasswordWithToken({
   token: ConfirmToken["token"];
 }) {
   try {
-    console.log(formData);
-
     const url = `/auth/update-password/${token}`;
     const { data } = await api.post<string>(url, formData);
 
@@ -108,7 +106,6 @@ export async function getUser() {
     const url = `/auth/user`;
     const { data } = await api(url);
     const response = userSchema.safeParse(data);
-    console.log(response);
     if (response.success) {
       return response.data;
     }

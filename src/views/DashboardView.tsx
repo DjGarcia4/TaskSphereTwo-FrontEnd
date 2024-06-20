@@ -7,6 +7,8 @@ import { Menu, Transition } from "@headlessui/react";
 import { Project } from "../types";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
+import { isManager } from "@/util/policies";
 
 const listVariants = {
   hidden: {
@@ -36,6 +38,7 @@ const itemVariants = {
 };
 
 const DashboardView = () => {
+  const { data: user, isLoading: authLoading } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: getProjects,
@@ -59,8 +62,8 @@ const DashboardView = () => {
     queryClient.invalidateQueries({ queryKey: ["projects"] });
   };
 
-  if (isLoading) return "Cargando...";
-  if (data)
+  if (isLoading && authLoading) return "Cargando...";
+  if (data && user)
     return (
       <motion.div
         initial={{ x: -100, opacity: 0 }}
@@ -100,59 +103,64 @@ const DashboardView = () => {
         </div>
         {data.length ? (
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5 "
             variants={listVariants}
             initial="hidden"
             animate="visible"
           >
-            {data.map((project) => (
+            {data.map((project: Project) => (
               <motion.div
-                className="bg-white p-5 rounded-lg shadow relative"
+                className="bg-white px-5 pt-5 pb-9 rounded-lg shadow relative flex flex-col justify-between"
                 key={project._id}
                 variants={itemVariants}
               >
-                <div className="flex shrink-0 items-center gap-x-6 absolute right-0">
-                  <Menu as="div" className="relative flex-none">
-                    <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-pink-600 transition-colors">
-                      <span className="sr-only">opciones</span>
-                      <EllipsisVerticalIcon
-                        className="h-9 w-9"
-                        aria-hidden="true"
-                      />
-                    </Menu.Button>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                        <Menu.Item>
-                          <Link
-                            to={`/projects/${project._id}/edit`}
-                            className="block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-100 transition-colors"
-                          >
-                            Editar Proyecto
-                          </Link>
-                        </Menu.Item>
-                        <Menu.Item>
-                          <button
-                            type="button"
-                            className="block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-gray-100 transition-colors w-full text-left"
-                            onClick={() => {
-                              handleDelete(project._id);
-                            }}
-                          >
-                            Eliminar Proyecto
-                          </button>
-                        </Menu.Item>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-                </div>
+                {isManager(project.manager, user._id) && (
+                  <>
+                    <div className="flex shrink-0 items-center gap-x-6 absolute right-0">
+                      <Menu as="div" className="relative flex-none">
+                        <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-pink-600 transition-colors">
+                          <span className="sr-only">opciones</span>
+                          <EllipsisVerticalIcon
+                            className="h-9 w-9"
+                            aria-hidden="true"
+                          />
+                        </Menu.Button>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                            <Menu.Item>
+                              <Link
+                                to={`/projects/${project._id}/edit`}
+                                className="block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-100 transition-colors"
+                              >
+                                Editar Proyecto
+                              </Link>
+                            </Menu.Item>
+                            <Menu.Item>
+                              <button
+                                type="button"
+                                className="block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-gray-100 transition-colors w-full text-left"
+                                onClick={() => {
+                                  handleDelete(project._id);
+                                }}
+                              >
+                                Eliminar Proyecto
+                              </button>
+                            </Menu.Item>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+                    </div>
+                  </>
+                )}
+
                 <div className="my-2">
                   <Link
                     to={`/projects/${project._id}`}
@@ -166,11 +174,28 @@ const DashboardView = () => {
                 <div className="w-full flex justify-end">
                   <Link
                     to={`/projects/${project._id}`}
-                    className="bg-emerald-500 hover:bg-emerald-600 px-2 py-1 text-white cursor-pointer transition-colors rounded-lg text-sm"
+                    className="bg-emerald-400 hover:bg-emerald-600 px-2 py-1 text-white cursor-pointer transition-colors rounded-lg text-sm"
                   >
                     Ver Proyecto
                   </Link>
                 </div>
+                {!isManager(project.manager, user._id) ? (
+                  <>
+                    <div className=" text-right absolute left-0 bottom-0 w-full">
+                      <p className=" text-white bg-rose-400 rounded-b-lg p-1 text-sm">
+                        Colaborador
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className=" text-right absolute left-0 bottom-0 w-full">
+                      <p className=" text-white bg-emerald-400 rounded-b-lg p-1 text-sm">
+                        Manager
+                      </p>
+                    </div>
+                  </>
+                )}
               </motion.div>
             ))}
           </motion.div>

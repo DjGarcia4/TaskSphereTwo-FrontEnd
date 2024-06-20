@@ -19,12 +19,14 @@ export async function getProjects() {
     if (response.success) {
       return response.data;
     }
+    return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error);
     }
   }
 }
+
 export async function getProjectsById(id: Project["_id"]) {
   try {
     const { data } = await api(`/projects/${id}`);
