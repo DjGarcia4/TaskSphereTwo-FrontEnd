@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useLocation, useNavigate } from "react-router-dom";
+import AddMemberForm from "./AddMemberForm";
 
 export default function AddMemberModal() {
   const location = useLocation();
@@ -43,14 +44,15 @@ export default function AddMemberModal() {
               >
                 <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all p-8">
                   <Dialog.Title as="h3" className="text-3xl md:text-4xl">
-                    Agregar Integrante al equipo
+                    Agregar Colaborador al equipo
                   </Dialog.Title>
                   <p className="text-xl md:text-1xl text-gray-500">
-                    Busca el nuevo integrante por email {""}
+                    Busca el nuevo colaborador por email {""}
                     <span className="text-pink-600">
                       para agregarlo al proyecto
                     </span>
                   </p>
+                  <AddMemberForm />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

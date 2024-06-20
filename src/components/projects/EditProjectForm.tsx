@@ -86,9 +86,22 @@ const EditProjectForm = ({ data, projectId }: EditProjectFormProps) => {
         <nav className=" my-5">
           <Link
             to="/"
-            className=" bg-pink-600 hover:bg-pink-700 px-10 py-3 text-white text-1xl  cursor-pointer transition-colors rounded-lg"
+            className="bg-pink-600 hover:bg-pink-700 px-5 py-3 text-white text-1xl cursor-pointer transition-colors rounded-lg flex justify-center items-center gap-2"
           >
-            Volver
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+              />
+            </svg>
           </Link>
         </nav>
       </div>

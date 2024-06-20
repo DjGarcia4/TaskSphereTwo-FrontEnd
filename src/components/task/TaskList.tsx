@@ -73,7 +73,7 @@ const TaskList = ({ tasks }: TaskListProps) => {
               ></div>
             </div>
             <motion.ul
-              className="mt-5 space-y-5"
+              className="mt-2 space-y-3"
               variants={listVariants}
               initial="hidden"
               animate="visible"
