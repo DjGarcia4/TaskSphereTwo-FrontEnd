@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 type TaskListProps = {
   tasks: Task[];
+  canEdit: boolean;
 };
 
 type GroupedTasks = {
@@ -54,7 +55,7 @@ const itemVariants = {
   },
 };
 
-const TaskList = ({ tasks }: TaskListProps) => {
+const TaskList = ({ tasks, canEdit }: TaskListProps) => {
   const groupedTasks = tasks.reduce((acc, task) => {
     let currentGroup = acc[task.status] ? [...acc[task.status]] : [];
     currentGroup = [...currentGroup, task];
@@ -89,7 +90,7 @@ const TaskList = ({ tasks }: TaskListProps) => {
                     variants={itemVariants}
                     custom={index}
                   >
-                    <TaskCard task={task} />
+                    <TaskCard task={task} canEdit={canEdit} />
                   </motion.li>
                 ))
               )}

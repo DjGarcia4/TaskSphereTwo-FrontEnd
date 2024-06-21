@@ -7,6 +7,8 @@ type TaskAPI = {
   projectId: Project["_id"];
   taskId: Task["_id"];
   status: Task["status"];
+  completedBy: Task["completedBy"];
+  assignedTo: Task["assignedTo"];
 };
 
 export async function createTask({
@@ -29,7 +31,9 @@ export async function getTaskById({
   try {
     const url = `/projects/${projectId}/tasks/${taskId}`;
     const { data } = await api(url);
+
     const response = taskSchema.safeParse(data);
+
     if (response.success) {
       return response.data;
     }
@@ -77,6 +81,26 @@ export async function updateStatus({
   try {
     const url = `/projects/${projectId}/tasks/${taskId}/status`;
     const { data } = await api.post<string>(url, { status });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+type updateAssigneProps = {
+  projectId: TaskAPI["projectId"];
+  taskId: TaskAPI["taskId"];
+  assignedTo: string;
+};
+export async function updateAssigne({
+  projectId,
+  taskId,
+  assignedTo,
+}: updateAssigneProps) {
+  try {
+    const url = `/projects/${projectId}/tasks/${taskId}/assigne`;
+    const { data } = await api.post<string>(url, { assignedTo });
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

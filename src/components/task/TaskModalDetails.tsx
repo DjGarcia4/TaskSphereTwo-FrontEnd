@@ -7,13 +7,24 @@ import {
   useParams,
 } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { getTaskById, updateStatus } from "@/api/TaskAPI";
+import { getTaskById, updateAssigne, updateStatus } from "@/api/TaskAPI";
 import toast from "react-hot-toast";
 import { formatDate } from "@/util/utils";
 import { statusTranslation } from "@/locales/es";
-import { Task } from "@/types/index";
+import { Task, TeamMember } from "@/types/index";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function TaskModalDetails() {
+type TaskModalDetailsProps = {
+  team: TeamMember[];
+  canEdit: boolean;
+};
+
+export default function TaskModalDetails({
+  team,
+  canEdit,
+}: TaskModalDetailsProps) {
+  const { data: user } = useAuth();
+
   const navigate = useNavigate();
   const params = useParams();
   const projectId = params.projectId!;
@@ -30,8 +41,11 @@ export default function TaskModalDetails() {
     enabled: !!taskId,
     retry: false,
   });
-  const mutation = useMutation({
+  const mutationState = useMutation({
     mutationFn: updateStatus,
+  });
+  const mutationAssigned = useMutation({
+    mutationFn: updateAssigne,
   });
   const handleStatus = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const data = {
@@ -39,7 +53,7 @@ export default function TaskModalDetails() {
       taskId,
       status: e.target.value as Task["status"],
     };
-    const myPromise = mutation.mutateAsync(data);
+    const myPromise = mutationState.mutateAsync(data);
 
     toast.promise(myPromise, {
       loading: "Actualizando Estado...",
@@ -51,6 +65,25 @@ export default function TaskModalDetails() {
     queryClient.invalidateQueries({ queryKey: ["project", projectId] });
     queryClient.invalidateQueries({ queryKey: ["task", taskId] });
   };
+  const handleAssigned = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const data = {
+      projectId,
+      taskId,
+      assignedTo: e.target.value as string,
+    };
+    const myPromise = mutationAssigned.mutateAsync(data);
+
+    toast.promise(myPromise, {
+      loading: "Asignando tarea...",
+      success: "Tarea asignada correctamente!",
+      error: "Error al asignar tarea",
+    });
+    await myPromise;
+
+    queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+    queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+  };
+
   if (isError) {
     toast.error("Tarea no encontrada");
     return <Navigate to={`/projects/${projectId}`} />;
@@ -103,6 +136,21 @@ export default function TaskModalDetails() {
                     <p className="text-lg  mb-2">
                       Descripción: {data.description}
                     </p>
+                    <p>Historial de cambios:</p>
+                    <ul className=" list-decimal ml-5">
+                      {data.completedBy.map((activityLog) => (
+                        <li key={activityLog._id}>
+                          Cambiado a{" "}
+                          <span className=" text-pink-600">
+                            {statusTranslation[activityLog.status]}
+                          </span>{" "}
+                          por:{" "}
+                          <span className=" text-pink-600">
+                            {activityLog.user.name}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
                     <div className="my-5 space-y-3">
                       <label className="">Estado Actual: </label>
                       <select
@@ -119,6 +167,57 @@ export default function TaskModalDetails() {
                         )}
                       </select>
                     </div>
+                    {team ? (
+                      data.assignedTo ? (
+                        canEdit ? (
+                          <div className="my-5 space-y-3">
+                            <label className="">Tarea Asignada a: </label>
+                            <select
+                              className=" w-full p-3 bg-white border border-gray-300 rounded-lg"
+                              defaultValue={data.assignedTo._id}
+                              onChange={handleAssigned}
+                            >
+                              <option value={user?._id}>{user?.name}</option>
+
+                              {team.map((member) => (
+                                <option key={member._id} value={member._id}>
+                                  {member.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : (
+                          <p>
+                            Tarea asignada a:{" "}
+                            <span className=" text-pink-600">
+                              {data.assignedTo.name}
+                            </span>
+                          </p>
+                        )
+                      ) : canEdit ? (
+                        <div className="my-5 space-y-3">
+                          <label className="text-red-500">
+                            Tarea aún sin asignar
+                          </label>
+                          <select
+                            className=" w-full p-3 bg-white border border-gray-300 rounded-lg"
+                            onChange={handleAssigned}
+                          >
+                            <option value="">Asigna tarea a un miembro</option>
+                            <option value={user?._id}>{user?.name}</option>
+                            {team.map((member) => (
+                              <option key={member._id} value={member._id}>
+                                {member.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      ) : (
+                        <p className="text-red-500">Tarea aún sin asignar</p>
+                      )
+                    ) : (
+                      <p>No hay miembros para asignar tarea</p>
+                    )}
                   </Dialog.Panel>
                 </Transition.Child>
               </div>

@@ -9,8 +9,9 @@ import toast from "react-hot-toast";
 
 type TaskCardProps = {
   task: Task;
+  canEdit: boolean;
 };
-const TaskCard = ({ task }: TaskCardProps) => {
+const TaskCard = ({ task, canEdit }: TaskCardProps) => {
   const navigate = useNavigate();
   const params = useParams();
   const projectId = params.projectId!;
@@ -30,7 +31,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
     toast.promise(myPromise, {
       loading: "Eliminando Tarea...",
       success: "Tarea Eliminada correctamente!",
-      error: "Error al eliminar la tarea",
+      error: (err) => {
+        const errorMessage = err.message || "Error al eliminar tarea";
+        return errorMessage;
+      },
     });
     await myPromise;
 
@@ -66,27 +70,31 @@ const TaskCard = ({ task }: TaskCardProps) => {
                   Ver Tarea
                 </button>
               </Menu.Item>
-              <Menu.Item>
-                <button
-                  type="button"
-                  className="block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-100 transition-colors w-full text-left"
-                  onClick={() =>
-                    navigate(location.pathname + `?editTask=${task._id}`)
-                  }
-                >
-                  Editar Tarea
-                </button>
-              </Menu.Item>
+              {canEdit && (
+                <>
+                  <Menu.Item>
+                    <button
+                      type="button"
+                      className="block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-100 transition-colors w-full text-left"
+                      onClick={() =>
+                        navigate(location.pathname + `?editTask=${task._id}`)
+                      }
+                    >
+                      Editar Tarea
+                    </button>
+                  </Menu.Item>
 
-              <Menu.Item>
-                <button
-                  type="button"
-                  className="block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-gray-100 transition-colors w-full text-left"
-                  onClick={() => handleDelete()}
-                >
-                  Eliminar Tarea
-                </button>
-              </Menu.Item>
+                  <Menu.Item>
+                    <button
+                      type="button"
+                      className="block px-3 py-1 text-sm leading-6 text-red-500 hover:bg-gray-100 transition-colors w-full text-left"
+                      onClick={() => handleDelete()}
+                    >
+                      Eliminar Tarea
+                    </button>
+                  </Menu.Item>
+                </>
+              )}
             </Menu.Items>
           </Transition>
         </Menu>
@@ -122,9 +130,15 @@ const TaskCard = ({ task }: TaskCardProps) => {
             2
           </button>
         </div>
-        <div className="bg-purple-400 hover:bg-purple-600 px-2 py-1 text-white  transition-colors rounded-lg text-xs">
-          Jared Garcia
-        </div>
+        {task.assignedTo ? (
+          <div className="bg-purple-400 hover:bg-purple-600 px-2 py-1 text-white  transition-colors rounded-lg text-xs">
+            {task.assignedTo.name}
+          </div>
+        ) : (
+          <div className="bg-red-400 hover:bg-red-600 px-2 py-1 text-white  transition-colors rounded-lg text-xs">
+            Sin Asignar
+          </div>
+        )}
       </div>
     </div>
   );

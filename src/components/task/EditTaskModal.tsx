@@ -47,7 +47,10 @@ export default function EditTaskModal({
     toast.promise(myPromise, {
       loading: "Editando Tarea...",
       success: "Tarea Actualizada correctamente!",
-      error: "Error al editar la tarea",
+      error: (err) => {
+        const errorMessage = err.message || "Error al editar tarea";
+        return errorMessage;
+      },
     });
     await myPromise;
 

@@ -9,6 +9,8 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { isManager } from "@/util/policies";
+import { useMemo } from "react";
+import { Project } from "@/types/index";
 
 const listVariants = {
   hidden: {
@@ -31,8 +33,16 @@ const ProjectDetailsView = () => {
     queryKey: ["project", projectId],
     queryFn: () => getProjectsById(projectId),
   });
+  const canEdit = useMemo(
+    () =>
+      data?.manager.some(
+        (manager: Project["manager"]) =>
+          manager.toString() === user?._id.toString()
+      ),
+    [data, user]
+  );
 
-  if (isLoading && authLoading) return "Cargando...";
+  if (isLoading && authLoading) return "@gando...";
   if (isError) return <Navigate to="/404" />;
   if (data && user)
     return (
@@ -121,11 +131,11 @@ const ProjectDetailsView = () => {
         </motion.div>
 
         <motion.div variants={listVariants} initial="hidden" animate="visible">
-          <TaskList tasks={data.tasks} />
+          <TaskList tasks={data.tasks} canEdit={canEdit} />
         </motion.div>
         <AddTaskModal />
         <EditTaskData />
-        <TaskModalDetails />
+        <TaskModalDetails team={data.team} canEdit={canEdit} />
       </>
     );
 };
