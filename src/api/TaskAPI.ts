@@ -9,6 +9,7 @@ type TaskAPI = {
   status: Task["status"];
   completedBy: Task["completedBy"];
   assignedTo: Task["assignedTo"];
+  notes: Task["notes"];
 };
 
 export async function createTask({
@@ -31,9 +32,7 @@ export async function getTaskById({
   try {
     const url = `/projects/${projectId}/tasks/${taskId}`;
     const { data } = await api(url);
-
     const response = taskSchema.safeParse(data);
-
     if (response.success) {
       return response.data;
     }
