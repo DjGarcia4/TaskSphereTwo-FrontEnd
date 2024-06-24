@@ -12,6 +12,9 @@ import RequestNewCodeView from "./views/auth/RequestNewCodeView";
 import ForgotPasswordView from "./views/auth/ForgotPasswordView";
 import NewPasswordView from "./views/auth/NewPasswordView";
 import ProjectTeamView from "./views/projects/ProjectTeamView";
+import ProfileView from "./views/profile/ProfileView";
+import ChangePasswordView from "./views/profile/ChangePasswordView";
+import ProfileLayout from "./layouts/ProfileLayout";
 
 const router = () => {
   return (
@@ -35,11 +38,19 @@ const router = () => {
             element={<EditProjectView />}
             index
           />
-          <Route
-            path="/projects/:projectId/team"
-            element={<ProjectTeamView />}
-            index
-          />
+          <Route element={<ProfileLayout />}>
+            <Route
+              path="/projects/:projectId/team"
+              element={<ProjectTeamView />}
+              index
+            />
+            <Route path="/profile" element={<ProfileView />} index />
+            <Route
+              path="/profile/password"
+              element={<ChangePasswordView />}
+              index
+            />
+          </Route>
         </Route>
         <Route element={<AurhLayout />}>
           <Route path="/auth/login" element={<LoginView />} index />
