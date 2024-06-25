@@ -38,12 +38,12 @@ const router = () => {
             element={<EditProjectView />}
             index
           />
+          <Route
+            path="/projects/:projectId/team"
+            element={<ProjectTeamView />}
+            index
+          />
           <Route element={<ProfileLayout />}>
-            <Route
-              path="/projects/:projectId/team"
-              element={<ProjectTeamView />}
-              index
-            />
             <Route path="/profile" element={<ProfileView />} index />
             <Route
               path="/profile/password"
