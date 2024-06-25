@@ -1,5 +1,5 @@
 import { Task } from "@/types/index";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Menu, Transition } from "@headlessui/react";
@@ -25,9 +25,12 @@ const TaskCard = ({ task, canEdit }: TaskCardProps) => {
     isDragging: isCurrentlyDragging,
   } = useDraggable({
     id: task._id,
-    onDragStart: () => setIsDragging(true),
-    onDragEnd: () => setIsDragging(false),
   });
+
+  // Use an effect to set dragging state based on isCurrentlyDragging
+  useEffect(() => {
+    setIsDragging(isCurrentlyDragging);
+  }, [isCurrentlyDragging]);
 
   const params = useParams();
   const projectId = params.projectId!;
