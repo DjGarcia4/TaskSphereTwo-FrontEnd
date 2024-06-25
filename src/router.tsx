@@ -15,6 +15,7 @@ import ProjectTeamView from "./views/projects/ProjectTeamView";
 import ProfileView from "./views/profile/ProfileView";
 import ChangePasswordView from "./views/profile/ChangePasswordView";
 import ProfileLayout from "./layouts/ProfileLayout";
+import NotFound from "./views/404/NotFound";
 
 const router = () => {
   return (
@@ -75,6 +76,9 @@ const router = () => {
             element={<NewPasswordView />}
             index
           />
+        </Route>
+        <Route element={<AurhLayout />}>
+          <Route path="/404" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
