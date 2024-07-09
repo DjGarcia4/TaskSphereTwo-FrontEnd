@@ -116,11 +116,17 @@ const TaskList = ({ tasks, canEdit }: TaskListProps) => {
               </div>
               <DropTask status={status} />
               <motion.ul
-                className="mt-2 space-y-3 h-[500px]  overflow-x-scroll  2xl:overflow-auto"
+                className="mt-2 space-y-3 p-1"
                 variants={listVariants}
                 initial="hidden"
                 animate="visible"
               >
+                {/* este es para limitar la columna y poder hacer scroll en y <motion.ul
+                className="mt-2 space-y-3 h-[500px] overflow-y-scroll p-1"
+                variants={listVariants}
+                initial="hidden"
+                animate="visible"
+              > */}
                 {tasks.length === 0 ? (
                   <li className="text-gray-500 text-center pt-3">
                     No Hay tareas

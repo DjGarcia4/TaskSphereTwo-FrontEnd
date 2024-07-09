@@ -73,7 +73,7 @@ const TaskCard = ({ task, canEdit }: TaskCardProps) => {
       {...attributes}
       ref={setNodeRef}
       style={style}
-      className={`bg-white rounded-lg shadow p-3 relative transition ${
+      className={`bg-white rounded-lg shadow p-3 relative transition  ${
         isDragging ? "opacity-75" : "opacity-100"
       }`}
     >
