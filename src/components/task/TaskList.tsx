@@ -104,10 +104,10 @@ const TaskList = ({ tasks, canEdit }: TaskListProps) => {
   };
   return (
     <div className="mt-10">
-      <div className="flex gap-5 overflow-x-scroll md:overflow-scroll-none 2xl:overflow-auto pb-32">
+      <div className="flex gap-5 overflow-x-scroll md:overflow-scroll-none 2xl:overflow-auto pb-32 ">
         <DndContext onDragEnd={handleDragEnd}>
           {Object.entries(groupedTasks).map(([status, tasks]) => (
-            <div key={status} className="min-w-[300px] 2xl:min-w-0 2xl:w-1/5">
+            <div key={status} className="min-w-[300px] 2xl:min-w-0 2xl:w-1/5 ">
               <div>
                 <h3 className={`text-xl`}>{statusTranslation[status]}</h3>
                 <div
@@ -116,7 +116,7 @@ const TaskList = ({ tasks, canEdit }: TaskListProps) => {
               </div>
               <DropTask status={status} />
               <motion.ul
-                className="mt-2 space-y-3"
+                className="mt-2 space-y-3 h-[500px]  overflow-x-scroll  2xl:overflow-auto"
                 variants={listVariants}
                 initial="hidden"
                 animate="visible"

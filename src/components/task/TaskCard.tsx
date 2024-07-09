@@ -143,7 +143,7 @@ const TaskCard = ({ task, canEdit }: TaskCardProps) => {
         <div className="my-2">
           <button
             onPointerDown={(e) => e.stopPropagation()}
-            className="text-xl hover:text-pink-600 transition-colors"
+            className="text-xl hover:text-pink-600 transition-colors text-left"
             onClick={() =>
               navigate(location.pathname + `?viewTask=${task._id}`)
             }

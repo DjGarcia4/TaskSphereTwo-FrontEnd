@@ -131,7 +131,9 @@ const ProjectDetailsView = () => {
         </motion.div>
 
         <motion.div variants={listVariants} initial="hidden" animate="visible">
-          <TaskList tasks={data.tasks} canEdit={canEdit} />
+          <div>
+            <TaskList tasks={data.tasks} canEdit={canEdit} />
+          </div>
         </motion.div>
         <AddTaskModal />
         <EditTaskData />
