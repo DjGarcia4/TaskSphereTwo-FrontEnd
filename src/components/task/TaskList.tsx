@@ -80,8 +80,12 @@ const TaskList = ({ tasks, canEdit }: TaskListProps) => {
   });
 
   const groupedTasks = tasks.reduce((acc, task) => {
-    let currentGroup = acc[task.status] ? [...acc[task.status]] : [];
-    currentGroup = [...currentGroup, task];
+    const currentGroup = acc[task.status] ? [...acc[task.status]] : [];
+    currentGroup.push(task);
+    currentGroup.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    ); // Ordenar por fecha de creación
     return { ...acc, [task.status]: currentGroup };
   }, initialStatusGroups);
 
