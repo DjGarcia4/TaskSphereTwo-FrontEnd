@@ -89,6 +89,9 @@ const TaskList = ({ tasks, canEdit }: TaskListProps) => {
     return { ...acc, [task.status]: currentGroup };
   }, initialStatusGroups);
 
+ 
+  
+
   const handleDragEnd = (e: DragEndEvent) => {
     const { over, active } = e;
     if (over && active) {
