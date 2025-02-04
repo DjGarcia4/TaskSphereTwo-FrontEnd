@@ -151,7 +151,9 @@ const TaskCard = ({ task, canEdit }: TaskCardProps) => {
             {task.name}
           </button>
 
-          <p className="text-gray-400 text-1xl">{task.description}</p>
+          <p className="text-gray-400 text-1xl line-clamp-2">
+            {task.description}
+          </p>
         </div>
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2 items-center">
